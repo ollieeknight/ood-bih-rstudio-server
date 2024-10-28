@@ -39,6 +39,12 @@ sed 's/^ \{2\}//' > "<%= working_dir_host %>/rsession.sh" << EOL
   done
   export LD_LIBRARY_PATH=/usr/lib64/:\$LD_LIBRARY_PATH
 
+  ## Added to fix internet routines errors
+  export LD_PRELOAD=/data/cephfs-1/home/users/${USER}/work/bin/miniforge3/envs/R_4.3.3/lib/libssl.so.3
+
+  export LD_LIBRARY_PATH=/data/cephfs-1/home/users/${USER}/work/bin/miniforge3/envs/R_4.3.3/lib:\$LD_LIBRARY_PATH
+  ## end of fix
+
   # Log all output from this script
   export RSESSION_LOG_FILE="<%= working_dir_container %>/rsession.log"
 
