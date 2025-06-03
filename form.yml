@@ -1,8 +1,8 @@
 cluster: "research"
 form:
   - r_provider
-  - conda_path
   - apptainer_image
+  - conda_path
   - bih_cpus
   - bih_mem
   - bih_time
@@ -16,8 +16,8 @@ attributes:
       on the Rocker project) or provide a path to your conda
       installation.
     options:
-      - [ "Apptainer", "apptainer" ]
-      - [ "conda", "conda" ]
+      - [ "Apptainer", "apptainer", data-hide-conda-path: true, data-set-conda-path: "hidden" ]
+      - [ "conda", "conda", data-set-conda-path: ""]
   conda_path:
     widget: "text_field"
     label: "Conda Path"
@@ -25,6 +25,7 @@ attributes:
       Specify the path including the "bin" of the Miniforge3 installation
       that you want to use.  Separate name of environment with a colon.
       Example: `~/work/miniforge/bin:fancy-r`.
+    required: true
   apptainer_image:
     widget: "select"
     label: "Apptainer Image"
@@ -32,9 +33,9 @@ attributes:
       The Apptainer images are not always up to date. Missing packages?
       Try to build and use your own conda environment!
     options:
-      - [ "rocker-rstudio_4.3.2.sif", "rocker-rstudio_4.3.2.sif" ]
-      - [ "rocker-rstudio_4.3.3.sif", "rocker-rstudio_4.3.3.sif" ]
       - [ "rocker-rstudio_4.4.1.sif", "rocker-rstudio_4.4.1.sif" ]
+      - [ "rocker-rstudio_4.4.2.sif", "rocker-rstudio_4.4.2.sif" ]
+      - [ "rocker-rstudio_4.5.0.sif", "rocker-rstudio_4.5.0.sif" ]
   bih_cpus:
     widget: "number_field"
     label: "Number of cores"
@@ -56,8 +57,8 @@ attributes:
     value: "1d"
     required: true
     help: |
-      Specify the running time in hours (e.g., '12h') or days (e.g., '3d') up to a maximum of 336 hours.
-    pattern: "^([1-9]h|[1-2][0-9]{1,2}h|3[0-2][0-9]h|33[0-6]h|[1-9]d|[1-2][0-9]d|3[0-4]d)$"
+      Specify the running time as either hours (e.g., '12h') or days (e.g., '3d').
+    pattern: "^([0-9]{1,2}h|[1-9]d|1[0-4]d)$"
   bih_partition:
     widget: select
     label: "partition to run in"
