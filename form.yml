@@ -1,45 +1,37 @@
 cluster: "research"
 form:
-  - r_provider
-  - apptainer_image
   - conda_path
+  - apptainer_image
   - bih_cpus
   - bih_mem
   - bih_time
   - bih_partition
 attributes:
-  r_provider:
-    widget: "select"
-    label: "R Source"
-    help: |
-      You can either use R from within the provided Apptainer image (based
-      on the Rocker project) or provide a path to your conda
-      installation.
-    options:
-      - [ "Apptainer", "apptainer", data-hide-conda-path: true, data-set-conda-path: "hidden" ]
-      - [ "conda", "conda", data-set-conda-path: ""]
   conda_path:
     widget: "text_field"
-    label: "Conda Path"
+    label: "Path to miniforge3 installation"
     help: |
       Specify the path including the "bin" of the Miniforge3 installation
       that you want to use.  Separate name of environment with a colon.
-      Example: `~/work/miniforge/bin:fancy-r`.
+      Example: `~/work/bin/miniforge3/bin:R_4.3.3`.
     required: true
+    value: "~/work/bin/miniforge3/bin:R_4.3.3"
   apptainer_image:
     widget: "select"
-    label: "Apptainer Image"
+    label: "RStudio server version"
+    value: "rocker-rstudio_4.5.0.sif"
     help: |
-      The Apptainer images are not always up to date. Missing packages?
-      Try to build and use your own conda environment!
+      These are regularly updated by the BIH-CUBI HPC team. You can choose 
+      a version which is above your version (likely 4.3.3). Choose the highest
+      one and if it doesn't work, try another
     options:
-      - [ "rocker-rstudio_4.4.1.sif", "rocker-rstudio_4.4.1.sif" ]
-      - [ "rocker-rstudio_4.4.2.sif", "rocker-rstudio_4.4.2.sif" ]
-      - [ "rocker-rstudio_4.5.0.sif", "rocker-rstudio_4.5.0.sif" ]
+      - [ "4.5.0", "rocker-rstudio_4.5.0.sif" ]
+      - [ "4.4.2", "rocker-rstudio_4.4.2.sif" ]
+      - [ "4.4.1", "rocker-rstudio_4.4.1.sif" ]
   bih_cpus:
     widget: "number_field"
     label: "Number of cores"
-    value: 4
+    value: 32
     help: Number of cores to allocate.
     min: 1
     max: 64
@@ -47,17 +39,17 @@ attributes:
   bih_mem:
     widget: "number_field"
     label: "Memory [GiB]"
-    value: 4
+    value: 64
     help: Memory to allocate for job.
     min: 1
-    max: 256
+    max: 199
   bih_time:
     widget: "text_field"
     label: "Running time"
     value: "1d"
     required: true
     help: |
-      Specify the running time as either hours (e.g., '12h') or days (e.g., '3d').
+      Specify the running time in either hours (e.g. '12h') or days (e.g. '3d').
     pattern: "^([0-9]{1,2}h|[1-9]d|1[0-4]d)$"
   bih_partition:
     widget: select
