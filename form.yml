@@ -1,5 +1,6 @@
 cluster: "research"
 form:
+  - r_provider
   - conda_path
   - apptainer_image
   - bih_cpus
@@ -7,6 +8,11 @@ form:
   - bih_time
   - bih_partition
 attributes:
+  r_provider:
+    widget: "select"
+    label: "R source"
+    options:
+      - [ "conda", "conda", data-set-conda-path: ""]
   conda_path:
     widget: "text_field"
     label: "Path to miniforge3 installation"
