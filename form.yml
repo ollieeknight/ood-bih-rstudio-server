@@ -10,16 +10,17 @@ form:
 attributes:
   r_provider:
     widget: "select"
-    label: "R source"
+    label: "R environment source"
+    help: "R will always be provided via a conda environment"
     options:
-      - [ "conda", "conda", data-set-conda-path: ""]
+      - [ "Conda Environment", "conda", data-set-conda-path: "" ]
   conda_path:
     widget: "text_field"
-    label: "Path to miniforge3 installation"
+    label: "Path to conda environment"
     help: |
-      Specify the path including the "bin" of the Miniforge3 installation
-      that you want to use, separate name of environment with a colon.
-      Example: `~/work/bin/miniforge3/bin:R_4.3.3`.
+      Specify the full path to your Miniforge3 installation's 'bin' directory,
+      followed by a colon and the name of your R environment.
+      Example: `~/work/bin/miniforge3/bin:R_4.3.3`
     required: true
     value: "~/work/bin/miniforge3/bin:R_4.3.3"
   apptainer_image:
@@ -27,41 +28,46 @@ attributes:
     label: "RStudio server version"
     value: "4.5.0"
     help: |
-      These are regularly updated by the BIH-CUBI HPC team. You can choose 
-      a version which is above your version (likely 4.3.3). Choose the highest
-      one and if it doesn't work, try another
+      The RStudio server images are maintained by the BIH-CUBI HPC team.
+      It's generally recommended to select the newest version available. If you
+      encounter issues, try an older version that is compatible with your R setup.
     options:
-      - [ "4.5.0", "rocker-rstudio_4.5.0.sif" ]
-      - [ "4.4.2", "rocker-rstudio_4.4.2.sif" ]
-      - [ "4.4.1", "rocker-rstudio_4.4.1.sif" ]
+      - [ "R 4.5.0", "rocker-rstudio_4.5.0.sif" ]
+      - [ "R 4.4.2", "rocker-rstudio_4.4.2.sif" ]
+      - [ "R 4.4.1", "rocker-rstudio_4.4.1.sif" ]
   bih_cpus:
     widget: "number_field"
-    label: "Number of cores"
-    value: 32
+    label: "Number of CPU cores"
+    value: 8
     min: 1
     max: 64
     step: 1
+    help: "Allocate the number of CPU cores for your RStudio server"
   bih_mem:
     widget: "number_field"
-    label: "Memory, in gigabytes"
-    value: 64
+    label: "Memory (in GB)"
+    value: 32
     min: 1
     max: 199
+    help: "Specify the amount of RAM (in gigabytes) for your RStudio session"
   bih_time:
     widget: "text_field"
-    label: "Running time"
-    value: "1d"
+    label: "Job running time"
+    value: "12h"
     required: true
     help: |
-      Specify the running time in either hours (e.g. '12h') or days (e.g. '3d')
+      Define the maximum duration for your RStudio server session.
+      Use 'h' for hours (e.g., '12h') or 'd' for days (e.g., '3d').
+      Maximum allowed: 14 days.
     pattern: "^([0-9]{1,2}h|[1-9]d|1[0-4]d)$"
   bih_partition:
     widget: select
-    label: "partition to run in"
-    value: "long"
+    label: "HPC partition"
+    value: "medium"
     help: |
-      - **medium** - at most 7 days available (up to 128 cores in all jobs)
-      - **long** - at most 28 days available (up to 32 cores in all jobs)
+      Select the HPC partition based on your job's requirements:
+      - **medium**: Up to 7 days runtime, with a maximum of 128 cores across all your jobs.
+      - **long**: Up to 28 days runtime, with a maximum of 32 cores across all your jobs.
     options:
-      - [ "medium", "medium" ]
-      - [ "long", "long" ]
+      - [ "Medium (Max 7 days, 128 cores)", "medium" ]
+      - [ "Long (Max 28 days, 32 cores)", "long" ]
