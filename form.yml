@@ -13,7 +13,7 @@ attributes:
     label: "R environment source"
     help: "R will always be provided via a conda environment"
     options:
-      - [ "Conda Environment", "conda", data-set-conda-path: "" ]
+      - [ "Conda environment", "conda", data-set-conda-path: "" ]
   conda_path:
     widget: "text_field"
     label: "Path to conda environment"
@@ -65,7 +65,6 @@ attributes:
     label: "HPC partition"
     value: "medium"
     help: |
-      Select the HPC partition based on your job's requirements:
       - **medium**: Up to 7 days runtime, with a maximum of 128 cores across all your jobs.
       - **long**: Up to 28 days runtime, with a maximum of 32 cores across all your jobs.
     options:
