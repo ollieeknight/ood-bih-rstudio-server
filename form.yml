@@ -12,14 +12,14 @@ attributes:
     label: "Path to miniforge3 installation"
     help: |
       Specify the path including the "bin" of the Miniforge3 installation
-      that you want to use.  Separate name of environment with a colon.
+      that you want to use, separate name of environment with a colon.
       Example: `~/work/bin/miniforge3/bin:R_4.3.3`.
     required: true
     value: "~/work/bin/miniforge3/bin:R_4.3.3"
   apptainer_image:
     widget: "select"
     label: "RStudio server version"
-    value: "rocker-rstudio_4.5.0.sif"
+    value: "4.5.0"
     help: |
       These are regularly updated by the BIH-CUBI HPC team. You can choose 
       a version which is above your version (likely 4.3.3). Choose the highest
@@ -32,15 +32,13 @@ attributes:
     widget: "number_field"
     label: "Number of cores"
     value: 32
-    help: Number of cores to allocate.
     min: 1
     max: 64
     step: 1
   bih_mem:
     widget: "number_field"
-    label: "Memory [GiB]"
+    label: "Memory, in gigabytes"
     value: 64
-    help: Memory to allocate for job.
     min: 1
     max: 199
   bih_time:
@@ -49,7 +47,7 @@ attributes:
     value: "1d"
     required: true
     help: |
-      Specify the running time in either hours (e.g. '12h') or days (e.g. '3d').
+      Specify the running time in either hours (e.g. '12h') or days (e.g. '3d')
     pattern: "^([0-9]{1,2}h|[1-9]d|1[0-4]d)$"
   bih_partition:
     widget: select
