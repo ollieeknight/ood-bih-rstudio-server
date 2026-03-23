@@ -20,7 +20,7 @@ attributes:
     help: |
       Specify the full path to your Miniforge3 installation's 'bin' directory,
       followed by a colon and the name of your R environment.
-      Example: `~/work/bin/miniforge3/bin:R_4.3.3`
+      For example: `~/work/bin/miniforge3/bin:R_4.3.3`
     required: true
     value: "~/work/bin/miniforge3/bin:R_4.3.3"
   apptainer_image:
@@ -29,7 +29,7 @@ attributes:
     value: "4.5.0"
     help: |
       The RStudio server images are maintained by the BIH-CUBI HPC team.
-      It's generally recommended to select the newest version available. If you
+      It's generally recommended to select the newest version available; if you
       encounter issues, try an older version that is compatible with your R setup.
     options:
       - [ "R 4.5.0", "rocker-rstudio_4.5.0.sif" ]
@@ -38,18 +38,25 @@ attributes:
   bih_cpus:
     widget: "number_field"
     label: "Number of CPU cores"
-    value: 8
+    value: 16
     min: 1
-    max: 64
+    max: 192
     step: 1
-    help: "Allocate the number of CPU cores for your RStudio server"
+    help: |
+      Allocate CPU cores for your RStudio server.
+      Practical max depends on selected partition and your current QoS usage.
+      Largest observed node size is 192 CPU cores (gpu), while long QoS is capped
+      at 64 CPU cores per user across all running jobs.
   bih_mem:
     widget: "number_field"
     label: "Memory (in GB)"
-    value: 32
+    value: 64
     min: 1
-    max: 199
-    help: "Specify the amount of RAM (in gigabytes) for your RStudio session"
+    max: 1000
+    help: |
+      Specify RAM in gigabytes.
+      Practical max depends on selected partition and your current QoS usage.
+      Largest observed node memory is about 4030 GB (highmem).
   bih_time:
     widget: "text_field"
     label: "Job running time"
@@ -65,8 +72,25 @@ attributes:
     label: "HPC partition"
     value: "medium"
     help: |
-      - **medium**: Up to 7 days runtime, with a maximum of 128 cores across all your jobs.
-      - **long**: Up to 28 days runtime, with a maximum of 32 cores across all your jobs.
+      Time and resource limits are enforced by Slurm partition and QoS policies.
+      Values below are based on current cluster settings:
+      - standard: max 8h, up to 96 CPU and 376 GB RAM on one node
+      - debug: max 1h, up to 96 CPU and 376 GB RAM on one node
+      - short: max 4h, up to 96 CPU and 376 GB RAM on one node; QoS user cap cpu=2000, mem=14000G
+      - medium: max 7d, up to 96 CPU and 376 GB RAM on one node; QoS user cap cpu=512, mem=3.50T
+      - long: max 14d, up to 96 CPU and 376 GB RAM on one node; QoS user cap cpu=64, mem=448G
+      - critical: max 7d, up to 96 CPU and 376 GB RAM on one node; QoS user cap cpu=12000, mem=84000G
+      - highmem: max 14d, up to 96 CPU and 4030 GB RAM on one node; QoS user cap mem=5397G
+      - gpu: max 14d on partition (gpu QoS shows 7d), up to 192 CPU and 976 GB RAM on one node
+
+      Note: Maximum values are not recommendations.
+      Please be mindful of other users when requesting large resources or long runtimes!
     options:
-      - [ "Medium (Max 7 days, 128 cores)", "medium" ]
-      - [ "Long (Max 28 days, 32 cores)", "long" ]
+      - [ "Standard (Max 8h)", "standard" ]
+      - [ "Debug (Max 1h)", "debug" ]
+      - [ "Short (Max 4h)", "short" ]
+      - [ "Medium (Max 7d)", "medium" ]
+      - [ "Long (Max 14d)", "long" ]
+      - [ "Critical (Max 7d)", "critical" ]
+      - [ "High memory (Max 14d)", "highmem" ]
+      - [ "GPU (Max 14d partition / 7d QoS)", "gpu" ]
