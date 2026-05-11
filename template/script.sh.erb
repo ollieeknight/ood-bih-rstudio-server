@@ -24,7 +24,7 @@ conda activate <%= conda[1] %>
 <% end %>
 export RSTUDIO_WHICH_R=$(which R)
 <% elsif context.r_provider == "pixi" && !context.pixi_path.to_s.empty? %>
-eval "$(~/.pixi/bin/pixi shell-hook -d <%= context.pixi_path %> 2>/dev/null || pixi shell-hook -d <%= context.pixi_path %>)"
+eval "$(~/.pixi/bin/pixi shell-hook -s bash -d <%= context.pixi_path %> 2>/dev/null || pixi shell-hook -s bash -d <%= context.pixi_path %>)"
 export RSTUDIO_WHICH_R=$(which R)
 <% end %>
 
@@ -42,11 +42,13 @@ sed 's/^ \{2\}//' > "<%= working_dir_host %>/rsession.sh" << EOL
   done
   export LD_LIBRARY_PATH=/usr/lib64/:\$LD_LIBRARY_PATH
 
+<% if context.r_provider == "conda" && !context.conda_path.to_s.empty? -%>
   ## Added to fix internet routines errors
   export LD_PRELOAD=/data/cephfs-1/home/users/${USER}/work/bin/miniforge3/envs/R_4.3.3/lib/libssl.so.3
 
   export LD_LIBRARY_PATH=/data/cephfs-1/home/users/${USER}/work/bin/miniforge3/envs/R_4.3.3/lib:\$LD_LIBRARY_PATH
   ## end of fix
+<% end -%>
 
   # Log all output from this script
   export RSESSION_LOG_FILE="<%= working_dir_container %>/rsession.log"
@@ -64,7 +66,7 @@ sed 's/^ \{2\}//' > "<%= working_dir_host %>/rsession.sh" << EOL
 <% end -%>
   export RSTUDIO_WHICH_R=\$(which R)
 <% elsif context.r_provider == "pixi" && !context.pixi_path.to_s.empty? -%>
-  eval "\$(~/.pixi/bin/pixi shell-hook -d <%= context.pixi_path %> 2>/dev/null || pixi shell-hook -d <%= context.pixi_path %>)"
+  eval "\$(~/.pixi/bin/pixi shell-hook -s bash -d <%= context.pixi_path %> 2>/dev/null || pixi shell-hook -s bash -d <%= context.pixi_path %>)"
   export RSTUDIO_WHICH_R=\$(which R)
   PIXI_PATH="<%= context.pixi_path %>"
   export LD_LIBRARY_PATH="\${PIXI_PATH/#\~/\$HOME}/.pixi/envs/default/lib:\$LD_LIBRARY_PATH"
