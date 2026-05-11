@@ -24,7 +24,8 @@ conda activate <%= conda[1] %>
 <% end %>
 export RSTUDIO_WHICH_R=$(which R)
 <% elsif context.r_provider == "pixi" && !context.pixi_path.to_s.empty? %>
-eval "$(~/.pixi/bin/pixi shell-hook -s bash -d <%= context.pixi_path %> 2>/dev/null || pixi shell-hook -s bash -d <%= context.pixi_path %>)"
+PIXI_PATH="<%= context.pixi_path.to_s.gsub('~', '${HOME}') %>"
+export PATH="${PIXI_PATH}/.pixi/envs/default/bin:$PATH"
 export RSTUDIO_WHICH_R=$(which R)
 <% end %>
 
@@ -66,10 +67,10 @@ sed 's/^ \{2\}//' > "<%= working_dir_host %>/rsession.sh" << EOL
 <% end -%>
   export RSTUDIO_WHICH_R=\$(which R)
 <% elsif context.r_provider == "pixi" && !context.pixi_path.to_s.empty? -%>
-  eval "\$(~/.pixi/bin/pixi shell-hook -s bash -d <%= context.pixi_path %> 2>/dev/null || pixi shell-hook -s bash -d <%= context.pixi_path %>)"
+  PIXI_PATH="<%= context.pixi_path.to_s.gsub('~', '${HOME}') %>"
+  export PATH="${PIXI_PATH}/.pixi/envs/default/bin:\$PATH"
+  export LD_LIBRARY_PATH="${PIXI_PATH}/.pixi/envs/default/lib:\$LD_LIBRARY_PATH"
   export RSTUDIO_WHICH_R=\$(which R)
-  PIXI_PATH="<%= context.pixi_path %>"
-  export LD_LIBRARY_PATH="\${PIXI_PATH/#\~/\$HOME}/.pixi/envs/default/lib:\$LD_LIBRARY_PATH"
 <% end -%>
 
   # Launch the original command
