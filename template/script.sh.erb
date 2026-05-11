@@ -16,14 +16,14 @@ export RSTUDIO_AUTH=$(readlink -f "<%= working_dir_container %>/bin/auth")
 
 source "<%= working_dir_container %>/.env"
 
-<% if context.r_provider == "conda" %>
+<% if context.r_provider == "conda" && !context.conda_path.to_s.empty? %>
 <% conda = context.conda_path.split(":") -%>
 source <%= conda[0] %>/activate
 <% if context.conda_path.include? ":" %>
 conda activate <%= conda[1] %>
 <% end %>
 export RSTUDIO_WHICH_R=$(which R)
-<% elsif context.r_provider == "pixi" %>
+<% elsif context.r_provider == "pixi" && !context.pixi_path.to_s.empty? %>
 eval "$(~/.pixi/bin/pixi shell-hook -d <%= context.pixi_path %> 2>/dev/null || pixi shell-hook -d <%= context.pixi_path %>)"
 export RSTUDIO_WHICH_R=$(which R)
 <% end %>
@@ -53,9 +53,9 @@ sed 's/^ \{2\}//' > "<%= working_dir_host %>/rsession.sh" << EOL
 
   exec &>>"\${RSESSION_LOG_FILE}"
 
-<% if context.r_provider == "conda" -%>
+<% if context.r_provider == "conda" && !context.conda_path.to_s.empty? -%>
   source <%= conda[0] %>/activate
-  CONDA_PATH="<%= conda[0].sub!("bin", "") %>"
+  CONDA_PATH="<%= conda[0].to_s.sub("bin", "") %>"
 <% if context.conda_path.include? ":" -%>
   conda activate <%= conda[1] %>
   export LD_LIBRARY_PATH="\${CONDA_PATH/#\~/\$HOME}/envs/<%= conda[1] %>/lib:\$LD_LIBRARY_PATH"
@@ -63,7 +63,7 @@ sed 's/^ \{2\}//' > "<%= working_dir_host %>/rsession.sh" << EOL
   export LD_LIBRARY_PATH="\${CONDA_PATH/#\~/\$HOME}:\$LD_LIBRARY_PATH"
 <% end -%>
   export RSTUDIO_WHICH_R=\$(which R)
-<% elsif context.r_provider == "pixi" -%>
+<% elsif context.r_provider == "pixi" && !context.pixi_path.to_s.empty? -%>
   eval "\$(~/.pixi/bin/pixi shell-hook -d <%= context.pixi_path %> 2>/dev/null || pixi shell-hook -d <%= context.pixi_path %>)"
   export RSTUDIO_WHICH_R=\$(which R)
   PIXI_PATH="<%= context.pixi_path %>"

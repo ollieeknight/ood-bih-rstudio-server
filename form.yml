@@ -23,7 +23,7 @@ attributes:
       Enter the full path to your Miniforge3 installation's 'bin' directory,
       then add a colon and the name of your R environment.
       For example: `~/work/bin/miniforge3/bin:R_4.3.3`
-    required: true
+    required: false
     value: "~/work/bin/miniforge3/bin:R_4.3.3"
   pixi_path:
     widget: "text_field"
