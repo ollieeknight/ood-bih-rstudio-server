@@ -23,6 +23,9 @@ source <%= conda[0] %>/activate
 conda activate <%= conda[1] %>
 <% end %>
 export RSTUDIO_WHICH_R=$(which R)
+<% elsif context.r_provider == "pixi" %>
+eval "$(~/.pixi/bin/pixi shell-hook -d <%= context.pixi_path %> 2>/dev/null || pixi shell-hook -d <%= context.pixi_path %>)"
+export RSTUDIO_WHICH_R=$(which R)
 <% end %>
 
 # Generate an `rsession` wrapper script
@@ -60,6 +63,11 @@ sed 's/^ \{2\}//' > "<%= working_dir_host %>/rsession.sh" << EOL
   export LD_LIBRARY_PATH="\${CONDA_PATH/#\~/\$HOME}:\$LD_LIBRARY_PATH"
 <% end -%>
   export RSTUDIO_WHICH_R=\$(which R)
+<% elsif context.r_provider == "pixi" -%>
+  eval "\$(~/.pixi/bin/pixi shell-hook -d <%= context.pixi_path %> 2>/dev/null || pixi shell-hook -d <%= context.pixi_path %>)"
+  export RSTUDIO_WHICH_R=\$(which R)
+  PIXI_PATH="<%= context.pixi_path %>"
+  export LD_LIBRARY_PATH="\${PIXI_PATH/#\~/\$HOME}/.pixi/envs/default/lib:\$LD_LIBRARY_PATH"
 <% end -%>
 
   # Launch the original command

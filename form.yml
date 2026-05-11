@@ -2,6 +2,7 @@ cluster: "research"
 form:
   - r_provider
   - conda_path
+  - pixi_path
   - apptainer_image
   - bih_cpus
   - bih_mem
@@ -11,9 +12,10 @@ attributes:
   r_provider:
     widget: "select"
     label: "R environment source"
-    help: "R is provided through a conda environment."
+    help: "R is provided through a conda or pixi environment."
     options:
-      - [ "Conda environment", "conda", data-set-conda-path: "" ]
+      - [ "Conda environment", "conda", data-set-conda-path: "~/work/bin/miniforge3/bin:R_4.3.3" ]
+      - [ "Pixi environment", "pixi", data-set-pixi-path: "~/work/bin/pixi/R_4.4.0" ]
   conda_path:
     widget: "text_field"
     label: "Path to conda environment"
@@ -23,6 +25,13 @@ attributes:
       For example: `~/work/bin/miniforge3/bin:R_4.3.3`
     required: true
     value: "~/work/bin/miniforge3/bin:R_4.3.3"
+  pixi_path:
+    widget: "text_field"
+    label: "Path to pixi project directory"
+    help: |
+      Enter the full path to your pixi project directory (the folder containing pixi.toml).
+      For example: `~/work/bin/pixi/R_4.4.0`
+    value: "~/work/bin/pixi/R_4.4.0"
   apptainer_image:
     widget: "select"
     label: "RStudio server version"
